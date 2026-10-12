@@ -1,27 +1,53 @@
+// "Fresh market editorial": warm paper, deep forest ink, one electric lime accent.
 export const colors = {
-  brand: '#0B5D3B', // deep green headline
-  green: '#3DB46D', // progress / remaining / FAB
-  greenSoft: '#E8F5EC',
-  text: '#1A1A1A',
-  textMuted: '#6B6B6B',
-  textFaint: '#9A9A9A',
-  border: '#E6E6E6',
-  track: '#EEF0F6',
-  bg: '#FFFFFF',
-  danger: '#D94141',
-  overlay: 'rgba(0,0,0,0.45)',
-  page: '#EEF2EF', // behind the app column on wide screens
+  bg: '#F5F2EA', // paper
+  surface: '#FFFFFF',
+  sunken: '#ECE7DB',
+  text: '#12201A', // ink
+  textMuted: '#5E6B63',
+  textFaint: '#9AA39D',
+  border: '#E2DCCD',
+  brand: '#0F3B2C', // forest
+  brandDeep: '#0A2A1F',
+  lime: '#C8F25A',
+  green: '#2E9E5B',
+  greenSoft: '#E3EEDC',
+  onBrand: '#F5F2EA',
+  onBrandMuted: 'rgba(245,242,234,0.62)',
+  danger: '#E2553D',
+  overlay: 'rgba(10,22,17,0.5)',
+  page: '#E9E4D8', // behind the app column on mid-size screens
 };
 
-/** Phone-width column the app is centered in on desktop browsers and tablets. */
-export const MAX_APP_WIDTH = 520;
+export const fonts = {
+  display: 'InstrumentSerif_400Regular',
+  displayItalic: 'InstrumentSerif_400Regular_Italic',
+  regular: 'Manrope_400Regular',
+  medium: 'Manrope_500Medium',
+  semibold: 'Manrope_600SemiBold',
+  bold: 'Manrope_700Bold',
+  extrabold: 'Manrope_800ExtraBold',
+};
 
-export const radius = { sm: 8, md: 14, lg: 20, pill: 999 };
+export const radius = { sm: 12, md: 16, lg: 24, xl: 28, pill: 999 };
 
 export const shadow = {
-  shadowColor: '#000',
-  shadowOpacity: 0.1,
-  shadowRadius: 16,
-  shadowOffset: { width: 0, height: 6 },
-  elevation: 6,
+  shadowColor: '#0A2A1F',
+  shadowOpacity: 0.12,
+  shadowRadius: 24,
+  shadowOffset: { width: 0, height: 10 },
+  elevation: 8,
 };
+
+/** Small uppercase label used above headings and numbers. */
+export const eyebrow = {
+  fontFamily: fonts.bold,
+  fontSize: 11,
+  letterSpacing: 1.6,
+  textTransform: 'uppercase' as const,
+};
+
+/** Phone-width column the app is centered in on tablets and mid-size browsers. */
+export const MAX_APP_WIDTH = 520;
+/** From this width the web app becomes a landing page with the app in a phone frame. */
+export const SHOWCASE_MIN_WIDTH = 1024;

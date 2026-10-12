@@ -23,7 +23,7 @@ import { cloudRecognize, cloudScanAvailable } from '@/lib/cloudScan';
 import { money, parseMoney } from '@/lib/format';
 import { parseScan, type Rect, type ScanResult } from '@/lib/ocr';
 import { useBudget, useListStore } from '@/store/useListStore';
-import { colors, radius } from '@/theme';
+import { colors, fonts, radius } from '@/theme';
 
 type Photo = { uri: string; width: number; height: number };
 type Phase = 'live' | 'processing' | 'result';
@@ -151,7 +151,7 @@ export default function ScanScreen() {
           <Text style={styles.permBody}>Enable camera access for SmartCart in Settings.</Text>
         )}
         <Pressable onPress={() => router.back()} style={{ padding: 16 }}>
-          <Text style={{ color: '#fff', fontSize: 16 }}>Not now</Text>
+          <Text style={{ color: '#fff', fontSize: 16, fontFamily: fonts.semibold }}>Not now</Text>
         </Pressable>
       </View>
     );
@@ -274,7 +274,7 @@ export default function ScanScreen() {
 function Brackets({ rect }: { rect: Rect }) {
   const size = 28;
   const corner = (pos: object, borders: object) => (
-    <View style={[{ position: 'absolute', width: size, height: size, borderColor: '#fff' }, pos, borders]} />
+    <View style={[{ position: 'absolute', width: size, height: size, borderColor: colors.lime, borderRadius: 4 }, pos, borders]} />
   );
   return (
     <View pointerEvents="none" style={[styles.brackets, rect]}>
@@ -361,10 +361,10 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
     backgroundColor: 'rgba(0,0,0,0.35)',
   },
-  retakeText: { color: '#fff', fontSize: 16, fontWeight: '500' },
+  retakeText: { color: '#fff', fontSize: 15, fontFamily: fonts.semibold },
   hint: { position: 'absolute', left: 24, right: 24, alignItems: 'center' },
-  hintTitle: { color: '#fff', fontSize: 22, fontWeight: '700', textShadowColor: 'rgba(0,0,0,0.5)', textShadowRadius: 6 },
-  hintBody: { color: '#fff', fontSize: 14, marginTop: 4, opacity: 0.9, textShadowColor: 'rgba(0,0,0,0.5)', textShadowRadius: 4 },
+  hintTitle: { color: '#fff', fontSize: 34, fontFamily: fonts.display, letterSpacing: -0.5, textShadowColor: 'rgba(0,0,0,0.5)', textShadowRadius: 8 },
+  hintBody: { color: '#fff', fontSize: 14, fontFamily: fonts.medium, marginTop: 4, opacity: 0.9, textShadowColor: 'rgba(0,0,0,0.5)', textShadowRadius: 4 },
   brackets: { position: 'absolute' },
   shutter: {
     position: 'absolute',
@@ -372,9 +372,9 @@ const styles = StyleSheet.create({
     width: 76,
     height: 76,
     borderRadius: 38,
-    backgroundColor: '#fff',
-    borderWidth: 5,
-    borderColor: 'rgba(255,255,255,0.45)',
+    backgroundColor: colors.lime,
+    borderWidth: 6,
+    borderColor: 'rgba(245,242,234,0.35)',
   },
   dot: {
     position: 'absolute',
@@ -392,46 +392,48 @@ const styles = StyleSheet.create({
     maxWidth: 220,
     justifyContent: 'center',
     paddingHorizontal: 14,
-    borderRadius: 12,
-    backgroundColor: '#fff',
+    borderRadius: radius.md,
+    backgroundColor: colors.bg,
     shadowColor: '#000',
     shadowOpacity: 0.2,
     shadowRadius: 8,
     elevation: 4,
   },
-  labelText: { fontSize: 18, color: colors.text, fontWeight: '500' },
+  labelText: { fontSize: 17, color: colors.text, fontFamily: fonts.bold },
   cardWrap: { position: 'absolute', left: 0, right: 0, bottom: 0 },
   card: {
-    backgroundColor: '#fff',
-    borderTopLeftRadius: radius.lg,
-    borderTopRightRadius: radius.lg,
+    backgroundColor: colors.bg,
+    borderTopLeftRadius: radius.xl,
+    borderTopRightRadius: radius.xl,
     paddingHorizontal: 20,
     paddingTop: 18,
   },
-  error: { color: colors.danger, marginBottom: 10, fontSize: 14 },
+  error: { color: colors.danger, marginBottom: 10, fontSize: 14, fontFamily: fonts.semibold },
   fields: { flexDirection: 'row', gap: 10 },
   input: {
     minWidth: 0, // web <input> has an intrinsic width that otherwise overflows flex rows
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: radius.sm,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    paddingHorizontal: 14,
+    paddingVertical: 13,
+    fontFamily: fonts.medium,
     fontSize: 16,
     color: colors.text,
   },
-  meta: { color: colors.textMuted, fontSize: 13, marginTop: 10, marginBottom: 4 },
+  meta: { color: colors.textMuted, fontSize: 13, fontFamily: fonts.medium, marginTop: 10, marginBottom: 4 },
   primary: {
-    backgroundColor: colors.green,
+    backgroundColor: colors.brand,
     borderRadius: radius.md,
     paddingVertical: 15,
     paddingHorizontal: 24,
     alignItems: 'center',
     marginTop: 10,
   },
-  primaryText: { color: '#fff', fontSize: 16, fontWeight: '700' },
+  primaryText: { color: colors.onBrand, fontSize: 16, fontFamily: fonts.bold },
   secondary: { paddingVertical: 12, alignItems: 'center' },
-  secondaryText: { color: colors.brand, fontSize: 15, fontWeight: '600' },
-  permTitle: { color: '#fff', fontSize: 22, fontWeight: '700', marginTop: 16 },
-  permBody: { color: '#ddd', fontSize: 15, textAlign: 'center', marginTop: 8, marginBottom: 16, lineHeight: 21 },
+  secondaryText: { color: colors.brand, fontSize: 15, fontFamily: fonts.bold },
+  permTitle: { color: '#fff', fontSize: 34, fontFamily: fonts.display, marginTop: 16 },
+  permBody: { color: '#ddd', fontSize: 15, fontFamily: fonts.medium, textAlign: 'center', marginTop: 8, marginBottom: 16, lineHeight: 21 },
 });

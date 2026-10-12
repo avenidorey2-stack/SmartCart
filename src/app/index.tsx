@@ -4,16 +4,16 @@ import { useCallback, useMemo, useState } from 'react';
 import { Alert, Platform, Pressable, SectionList, Share, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { BottomBar } from '@/components/BottomBar';
+import { BottomBar, DOCK_CLEARANCE } from '@/components/BottomBar';
 import { BudgetCard } from '@/components/BudgetCard';
 import { DetailsSheet } from '@/components/DetailsSheet';
 import { ItemRow } from '@/components/ItemRow';
 import { ItemSheet } from '@/components/ItemSheet';
 import { MenuSheet, type MenuAction } from '@/components/MenuSheet';
 import { CATEGORIES, type Category } from '@/lib/categorize';
-import { money } from '@/lib/format';
+import { money, sentenceCase } from '@/lib/format';
 import { lineTotal, useBudget, useListStore, type Item } from '@/store/useListStore';
-import { colors } from '@/theme';
+import { colors, eyebrow, fonts, radius } from '@/theme';
 
 type Section = { category: Category; count: number; data: Item[] };
 
@@ -91,9 +91,14 @@ export default function ListScreen() {
 
   return (
     <SafeAreaView style={styles.screen} edges={['top']}>
-      {/* Top app bar */}
+      {/* Top app bar: store and actions, then the list name (tap to edit) */}
       <View style={styles.appBar}>
-        <View style={{ flex: 1 }} />
+        <View style={styles.eyebrowRow}>
+          <View style={styles.dot} />
+          <Text style={styles.eyebrow} numberOfLines={1}>
+            {store || 'SmartCart'}
+          </Text>
+        </View>
         <IconButton
           name={searching ? 'close' : 'search'}
           label="Search"
@@ -103,27 +108,28 @@ export default function ListScreen() {
           }}
         />
         <IconButton name="share-outline" label="Share list" onPress={share} />
-        <IconButton name="ellipsis-vertical" label="More options" onPress={() => setMenu(true)} />
+        <IconButton name="ellipsis-horizontal" label="More options" onPress={() => setMenu(true)} />
       </View>
+      <Pressable style={styles.header} onPress={() => setDetailsSheet(true)} accessibilityHint="Edit list name and store">
+        <Text style={styles.title} numberOfLines={1}>
+          {title}
+        </Text>
+      </Pressable>
 
       {searching ? (
-        <TextInput
-          style={styles.search}
-          placeholder="Search items"
-          placeholderTextColor={colors.textFaint}
-          value={query}
-          onChangeText={setQuery}
-          autoFocus
-          clearButtonMode="while-editing"
-        />
-      ) : (
-        <Pressable style={styles.header} onPress={() => setDetailsSheet(true)}>
-          <Text style={styles.title} numberOfLines={1}>
-            {title}
-          </Text>
-          {store ? <Text style={styles.store}>{store}</Text> : null}
-        </Pressable>
-      )}
+        <View style={styles.searchWrap}>
+          <Ionicons name="search" size={18} color={colors.textFaint} />
+          <TextInput
+            style={styles.search}
+            placeholder="Search your list"
+            placeholderTextColor={colors.textFaint}
+            value={query}
+            onChangeText={setQuery}
+            autoFocus
+            clearButtonMode="while-editing"
+          />
+        </View>
+      ) : null}
 
       {/* Sticky budget tracker — lives outside the scroll view so it never scrolls away. */}
       <View style={styles.budgetWrap}>
@@ -134,8 +140,9 @@ export default function ListScreen() {
         sections={sections}
         keyExtractor={(it) => it.id}
         stickySectionHeadersEnabled={false}
-        contentContainerStyle={{ paddingBottom: 24, flexGrow: 1 }}
+        contentContainerStyle={{ paddingBottom: DOCK_CLEARANCE, flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
         renderSectionHeader={({ section }) => {
           const isCollapsed = !!collapsed[section.category] && !query;
           const subtotal = items.filter((it) => it.category === section.category).reduce((s, it) => s + lineTotal(it), 0);
@@ -146,9 +153,12 @@ export default function ListScreen() {
               accessibilityRole="button"
               accessibilityState={{ expanded: !isCollapsed }}
             >
-              <Text style={styles.sectionTitle}>
-                {section.category} <Text style={styles.sectionCount}>({section.count})</Text>
-              </Text>
+              <View style={styles.sectionLeft}>
+                <Text style={styles.sectionTitle}>{sentenceCase(section.category)}</Text>
+                <View style={styles.countPill}>
+                  <Text style={styles.sectionCount}>{section.count}</Text>
+                </View>
+              </View>
               <View style={styles.sectionRight}>
                 <Text style={styles.subtotal}>{money(subtotal)}</Text>
                 <Ionicons name={isCollapsed ? 'chevron-forward' : 'chevron-down'} size={16} color={colors.textFaint} />
@@ -156,13 +166,25 @@ export default function ListScreen() {
             </Pressable>
           );
         }}
-        renderItem={({ item }) => <ItemRow item={item} onToggle={toggleChecked} onPress={openEdit} />}
+        renderItem={({ item, index, section }) => (
+          <ItemRow
+            item={item}
+            index={index}
+            last={index === section.data.length - 1}
+            onToggle={toggleChecked}
+            onPress={openEdit}
+          />
+        )}
         ListEmptyComponent={
           <View style={styles.empty}>
-            <Ionicons name="basket-outline" size={48} color={colors.textFaint} />
-            <Text style={styles.emptyText}>
-              {query ? `No items match “${query}”` : 'Your list is empty.\nTap Add item, or scan a price tag.'}
+            <View style={styles.emptyIcon}>
+              <Ionicons name="basket-outline" size={30} color={colors.brand} />
+            </View>
+            <Text style={styles.emptyTitle}>
+              {query ? 'Nothing matches ' : 'A fresh '}
+              <Text style={{ fontFamily: fonts.displayItalic }}>{query ? `“${query}”` : 'list.'}</Text>
             </Text>
+            {!query ? <Text style={styles.emptyText}>Add your first item, or scan a shelf price tag.</Text> : null}
           </View>
         }
       />
@@ -186,42 +208,73 @@ function IconButton({
   onPress: () => void;
 }) {
   return (
-    <Pressable onPress={onPress} hitSlop={8} style={styles.iconBtn} accessibilityLabel={label} accessibilityRole="button">
-      <Ionicons name={name} size={24} color={colors.text} />
+    <Pressable
+      onPress={onPress}
+      hitSlop={6}
+      style={({ pressed }) => [styles.iconBtn, pressed && { backgroundColor: colors.sunken }]}
+      accessibilityLabel={label}
+      accessibilityRole="button"
+    >
+      <Ionicons name={name} size={20} color={colors.text} />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
-  appBar: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, height: 52 },
-  iconBtn: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
-  header: { paddingHorizontal: 20, paddingBottom: 14 },
-  title: { fontSize: 28, fontWeight: '700', color: colors.text },
-  store: { fontSize: 15, color: colors.textFaint, marginTop: 2 },
-  search: {
-    marginHorizontal: 20,
-    marginBottom: 14,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 10,
-    backgroundColor: '#F3F4F6',
-    fontSize: 16,
-    color: colors.text,
+  appBar: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingLeft: 20, paddingRight: 16, paddingTop: 6 },
+  header: { paddingHorizontal: 20, paddingTop: 2, paddingBottom: 14 },
+  eyebrowRow: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 6 },
+  dot: { width: 7, height: 7, borderRadius: 4, backgroundColor: colors.green },
+  eyebrow: { ...eyebrow, color: colors.textMuted },
+  title: { fontFamily: fonts.display, fontSize: 46, lineHeight: 50, letterSpacing: -1.5, color: colors.text },
+  iconBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: colors.border,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
+  searchWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginHorizontal: 16,
+    marginBottom: 14,
+    paddingHorizontal: 16,
+    borderRadius: radius.pill,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  search: { flex: 1, minWidth: 0, paddingVertical: 12, fontFamily: fonts.medium, fontSize: 16, color: colors.text },
   budgetWrap: { zIndex: 2, paddingBottom: 8 },
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingTop: 18,
-    paddingBottom: 6,
+    paddingHorizontal: 24,
+    paddingTop: 22,
+    paddingBottom: 10,
   },
-  sectionTitle: { fontSize: 13, fontWeight: '500', color: colors.textMuted, letterSpacing: 0.6 },
-  sectionCount: { color: colors.textFaint },
+  sectionLeft: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  sectionTitle: { fontFamily: fonts.displayItalic, fontSize: 24, color: colors.text },
+  countPill: { paddingHorizontal: 7, paddingVertical: 1, borderRadius: radius.pill, backgroundColor: colors.sunken },
+  sectionCount: { fontFamily: fonts.bold, fontSize: 11, color: colors.textMuted },
   sectionRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  subtotal: { fontSize: 13, fontWeight: '600', color: colors.textMuted, fontVariant: ['tabular-nums'] },
-  empty: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 40, gap: 12 },
-  emptyText: { textAlign: 'center', color: colors.textMuted, fontSize: 15, lineHeight: 22 },
+  subtotal: { fontFamily: fonts.semibold, fontSize: 13, color: colors.textMuted, fontVariant: ['tabular-nums'] },
+  empty: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 40, gap: 10 },
+  emptyIcon: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: colors.lime,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+  emptyTitle: { fontFamily: fonts.display, fontSize: 32, color: colors.text, textAlign: 'center' },
+  emptyText: { fontFamily: fonts.medium, textAlign: 'center', color: colors.textMuted, fontSize: 15, lineHeight: 22 },
 });

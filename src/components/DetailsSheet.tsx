@@ -34,11 +34,11 @@ function DetailsForm({ onClose }: { onClose: () => void }) {
 
   return (
     <>
-      <Text style={{ color: colors.textMuted, marginBottom: 6 }}>Budget ($)</Text>
+      <Text style={styles.label}>Budget ($)</Text>
       <TextInput style={styles.input} value={budgetText} onChangeText={setBudgetText} keyboardType="decimal-pad" selectTextOnFocus />
-      <Text style={{ color: colors.textMuted, marginBottom: 6 }}>List name</Text>
+      <Text style={styles.label}>List name</Text>
       <TextInput style={styles.input} value={titleText} onChangeText={setTitleText} />
-      <Text style={{ color: colors.textMuted, marginBottom: 6 }}>Store</Text>
+      <Text style={styles.label}>Store</Text>
       <TextInput style={styles.input} value={storeText} onChangeText={setStoreText} placeholder="Optional" placeholderTextColor={colors.textFaint} />
       <Pressable onPress={save} disabled={parsed === null} style={[styles.primary, parsed === null && { opacity: 0.4 }]}>
         <Text style={styles.primaryText}>Save</Text>

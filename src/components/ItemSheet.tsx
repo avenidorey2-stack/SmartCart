@@ -5,7 +5,7 @@ import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-
 import { CATEGORIES, categorize, type Category } from '@/lib/categorize';
 import { money, parseMoney } from '@/lib/format';
 import { useListStore, type Item } from '@/store/useListStore';
-import { colors, radius } from '@/theme';
+import { colors, eyebrow, fonts, radius } from '@/theme';
 
 import { Sheet } from './Sheet';
 
@@ -128,54 +128,69 @@ function StepButton({ icon, onPress, label }: { icon: 'add' | 'remove'; onPress:
 }
 
 export const formStyles = StyleSheet.create({
+  label: { ...eyebrow, color: colors.textMuted, marginBottom: 8 },
   input: {
     minWidth: 0, // web <input> has an intrinsic width that otherwise overflows flex rows
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: radius.sm,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    fontFamily: fonts.medium,
     fontSize: 16,
     color: colors.text,
     marginBottom: 12,
   },
   primary: {
-    backgroundColor: colors.green,
-    borderRadius: radius.md,
-    paddingVertical: 15,
+    backgroundColor: colors.brand,
+    borderRadius: radius.lg,
+    paddingVertical: 17,
     alignItems: 'center',
     marginTop: 8,
   },
-  primaryText: { color: '#fff', fontSize: 16, fontWeight: '700' },
+  primaryText: { fontFamily: fonts.bold, color: colors.onBrand, fontSize: 16 },
   secondary: { paddingVertical: 14, alignItems: 'center' },
-  secondaryText: { fontSize: 15, fontWeight: '600', color: colors.textMuted },
+  secondaryText: { fontFamily: fonts.semibold, fontSize: 15, color: colors.textMuted },
 });
 
 const styles = StyleSheet.create({
   ...formStyles,
   row: { flexDirection: 'row', gap: 12 },
-  qtyRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 },
-  qtyLabel: { fontSize: 15, color: colors.textMuted },
-  stepper: { flexDirection: 'row', alignItems: 'center', gap: 14 },
-  step: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+  qtyRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 14,
+    paddingLeft: 16,
+    paddingRight: 8,
+    paddingVertical: 8,
+    borderRadius: radius.md,
+    backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
+  },
+  qtyLabel: { fontFamily: fonts.medium, fontSize: 15, color: colors.textMuted },
+  stepper: { flexDirection: 'row', alignItems: 'center', gap: 14 },
+  step: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: colors.sunken,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  qty: { fontSize: 17, fontWeight: '600', minWidth: 22, textAlign: 'center', color: colors.text },
+  qty: { fontFamily: fonts.display, fontSize: 26, minWidth: 24, textAlign: 'center', color: colors.text },
   chips: { gap: 8, paddingVertical: 4, marginBottom: 8 },
   chip: {
-    paddingHorizontal: 12,
-    paddingVertical: 7,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
     borderRadius: radius.pill,
     borderWidth: 1,
     borderColor: colors.border,
+    backgroundColor: colors.surface,
   },
-  chipOn: { backgroundColor: colors.greenSoft, borderColor: colors.green },
-  chipText: { fontSize: 12, fontWeight: '600', color: colors.textMuted, letterSpacing: 0.5 },
-  chipTextOn: { color: colors.brand },
+  chipOn: { backgroundColor: colors.brand, borderColor: colors.brand },
+  chipText: { fontFamily: fonts.bold, fontSize: 11, color: colors.textMuted, letterSpacing: 0.8 },
+  chipTextOn: { color: colors.lime },
 });
