@@ -1,27 +1,33 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors, radius, shadow } from '@/theme';
 
-type Props = { onMic: () => void; onAdd: () => void; onScan: () => void };
+type Props = { onAdd: () => void; onScan: () => void };
 
-export function BottomBar({ onMic, onAdd, onScan }: Props) {
+/** The two ways to add an item, labelled so they're obvious at a glance. */
+export function BottomBar({ onAdd, onScan }: Props) {
   const insets = useSafeAreaInsets();
   return (
     <View style={[styles.bar, { paddingBottom: Math.max(insets.bottom, 12) }]}>
-      <Pressable onPress={onMic} hitSlop={10} style={styles.side} accessibilityLabel="Add by voice">
-        <Ionicons name="mic-outline" size={28} color={colors.textMuted} />
+      <Pressable
+        onPress={onScan}
+        style={({ pressed }) => [styles.button, styles.scan, pressed && styles.pressed]}
+        accessibilityRole="button"
+        accessibilityLabel="Scan price tag"
+      >
+        <MaterialCommunityIcons name="line-scan" size={22} color={colors.brand} />
+        <Text style={[styles.label, { color: colors.brand }]}>Scan tag</Text>
       </Pressable>
       <Pressable
         onPress={onAdd}
-        style={({ pressed }) => [styles.fab, pressed && { transform: [{ scale: 0.95 }] }]}
+        style={({ pressed }) => [styles.button, styles.add, pressed && styles.pressed]}
+        accessibilityRole="button"
         accessibilityLabel="Add item"
       >
-        <Ionicons name="add" size={32} color="#fff" />
-      </Pressable>
-      <Pressable onPress={onScan} hitSlop={10} style={styles.side} accessibilityLabel="Scan price tag">
-        <MaterialCommunityIcons name="line-scan" size={28} color={colors.textMuted} />
+        <Ionicons name="add" size={24} color="#fff" />
+        <Text style={[styles.label, { color: '#fff' }]}>Add item</Text>
       </Pressable>
     </View>
   );
@@ -30,23 +36,24 @@ export function BottomBar({ onMic, onAdd, onScan }: Props) {
 const styles = StyleSheet.create({
   bar: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    paddingTop: 10,
+    gap: 12,
+    paddingHorizontal: 16,
+    paddingTop: 12,
     backgroundColor: 'rgba(255,255,255,0.97)',
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: colors.border,
   },
-  side: { width: 56, height: 56, alignItems: 'center', justifyContent: 'center' },
-  fab: {
-    width: 64,
-    height: 64,
+  button: {
+    flex: 1,
+    height: 54,
     borderRadius: radius.md,
-    backgroundColor: colors.green,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    ...shadow,
-    shadowColor: colors.green,
-    shadowOpacity: 0.4,
+    gap: 8,
   },
+  scan: { backgroundColor: colors.greenSoft },
+  add: { backgroundColor: colors.green, ...shadow, shadowColor: colors.green, shadowOpacity: 0.35 },
+  pressed: { transform: [{ scale: 0.97 }], opacity: 0.9 },
+  label: { fontSize: 16, fontWeight: '700' },
 });

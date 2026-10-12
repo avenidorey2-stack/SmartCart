@@ -10,7 +10,11 @@ export const colors = {
   bg: '#FFFFFF',
   danger: '#D94141',
   overlay: 'rgba(0,0,0,0.45)',
+  page: '#EEF2EF', // behind the app column on wide screens
 };
+
+/** Phone-width column the app is centered in on desktop browsers and tablets. */
+export const MAX_APP_WIDTH = 520;
 
 export const radius = { sm: 8, md: 14, lg: 20, pill: 999 };
 

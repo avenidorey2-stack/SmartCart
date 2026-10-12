@@ -93,7 +93,6 @@ export default function ListScreen() {
     <SafeAreaView style={styles.screen} edges={['top']}>
       {/* Top app bar */}
       <View style={styles.appBar}>
-        <IconButton name="arrow-back" label="Back" onPress={() => router.canGoBack() && router.back()} />
         <View style={{ flex: 1 }} />
         <IconButton
           name={searching ? 'close' : 'search'}
@@ -151,7 +150,7 @@ export default function ListScreen() {
                 {section.category} <Text style={styles.sectionCount}>({section.count})</Text>
               </Text>
               <View style={styles.sectionRight}>
-                {isCollapsed ? <Text style={styles.subtotal}>{money(subtotal)}</Text> : null}
+                <Text style={styles.subtotal}>{money(subtotal)}</Text>
                 <Ionicons name={isCollapsed ? 'chevron-forward' : 'chevron-down'} size={16} color={colors.textFaint} />
               </View>
             </Pressable>
@@ -162,13 +161,13 @@ export default function ListScreen() {
           <View style={styles.empty}>
             <Ionicons name="basket-outline" size={48} color={colors.textFaint} />
             <Text style={styles.emptyText}>
-              {query ? `No items match “${query}”` : 'Your list is empty.\nTap + to add an item or scan a price tag.'}
+              {query ? `No items match “${query}”` : 'Your list is empty.\nTap Add item, or scan a price tag.'}
             </Text>
           </View>
         }
       />
 
-      <BottomBar onMic={openAdd} onAdd={openAdd} onScan={() => router.push('/scan')} />
+      <BottomBar onAdd={openAdd} onScan={() => router.push('/scan')} />
 
       <ItemSheet visible={itemSheet} item={editing} onClose={() => setItemSheet(false)} />
       <DetailsSheet visible={detailsSheet} onClose={() => setDetailsSheet(false)} />
@@ -222,7 +221,7 @@ const styles = StyleSheet.create({
   sectionTitle: { fontSize: 13, fontWeight: '500', color: colors.textMuted, letterSpacing: 0.6 },
   sectionCount: { color: colors.textFaint },
   sectionRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  subtotal: { fontSize: 13, color: colors.textFaint },
+  subtotal: { fontSize: 13, fontWeight: '600', color: colors.textMuted, fontVariant: ['tabular-nums'] },
   empty: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 40, gap: 12 },
   emptyText: { textAlign: 'center', color: colors.textMuted, fontSize: 15, lineHeight: 22 },
 });

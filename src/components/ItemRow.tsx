@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { money } from '@/lib/format';
 import type { Item } from '@/store/useListStore';
-import { colors } from '@/theme';
+import { colors, radius } from '@/theme';
 
 type Props = {
   item: Item;
@@ -29,12 +29,20 @@ export const ItemRow = memo(function ItemRow({ item, onToggle, onPress }: Props)
         <Text style={[styles.name, item.checked && styles.done]} numberOfLines={1}>
           {item.name}
         </Text>
-        <Text style={styles.meta}>
-          {money(item.price)} · ×{item.qty} · {item.unit}
-          {item.source === 'scan' ? '  ·  scanned' : ''}
-        </Text>
+        <View style={styles.metaRow}>
+          <Text style={styles.meta}>
+            {item.qty} {item.unit}
+            {item.qty > 1 ? ` · ${money(item.price)} each` : ''}
+          </Text>
+          {item.source === 'scan' ? (
+            <View style={styles.badge}>
+              <Ionicons name="scan-outline" size={11} color={colors.brand} />
+              <Text style={styles.badgeText}>Scanned</Text>
+            </View>
+          ) : null}
+        </View>
       </View>
-      {item.qty > 1 ? <Text style={styles.total}>{money(item.price * item.qty)}</Text> : null}
+      <Text style={[styles.total, item.checked && styles.totalDone]}>{money(item.price * item.qty)}</Text>
     </Pressable>
   );
 });
@@ -55,6 +63,18 @@ const styles = StyleSheet.create({
   body: { flex: 1 },
   name: { fontSize: 17, color: colors.text, marginBottom: 3 },
   done: { color: colors.textFaint, textDecorationLine: 'line-through' },
+  metaRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   meta: { fontSize: 13, color: colors.textMuted },
-  total: { fontSize: 14, color: colors.textMuted, fontVariant: ['tabular-nums'] },
+  badge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+    borderRadius: radius.pill,
+    backgroundColor: colors.greenSoft,
+  },
+  badgeText: { fontSize: 11, color: colors.brand, fontWeight: '600' },
+  total: { fontSize: 16, fontWeight: '600', color: colors.text, marginLeft: 12, fontVariant: ['tabular-nums'] },
+  totalDone: { color: colors.textFaint, fontWeight: '400' },
 });

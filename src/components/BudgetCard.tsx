@@ -24,10 +24,10 @@ export function BudgetCard({ onPress }: { onPress: () => void }) {
       accessibilityLabel={`Budget ${money(budget)}, spent ${money(spent)}, remaining ${money(remaining)}. Tap to edit budget.`}
     >
       <View style={styles.row}>
-        <Stat label="Budget:" value={money(budget)} />
+        <Stat label="Budget" value={money(budget)} />
         <Stat label="Spent" value={money(spent)} align="center" />
         <Stat
-          label={over ? 'Over by:' : 'Remaining:'}
+          label={over ? 'Over by' : 'Remaining'}
           value={money(Math.abs(remaining))}
           align="right"
           color={barColor}

@@ -47,7 +47,11 @@ export default function ScanScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const camera = useRef<CameraView>(null);
   const insets = useSafeAreaInsets();
-  const { width: W, height: H } = useWindowDimensions();
+  // Measure the screen itself, not the window: on wide web/tablet layouts it sits in a narrower column.
+  const win = useWindowDimensions();
+  const [box, setBox] = useState<{ width: number; height: number } | null>(null);
+  const W = box?.width ?? win.width;
+  const H = box?.height ?? win.height;
 
   const addItem = useListStore((s) => s.addItem);
   const { remaining } = useBudget();
@@ -158,7 +162,10 @@ export default function ScanScreen() {
   const showResult = phase === 'result';
 
   return (
-    <View style={styles.black}>
+    <View
+      style={styles.black}
+      onLayout={(e) => setBox({ width: e.nativeEvent.layout.width, height: e.nativeEvent.layout.height })}
+    >
       <StatusBar style="light" />
       <CameraView
         ref={camera}

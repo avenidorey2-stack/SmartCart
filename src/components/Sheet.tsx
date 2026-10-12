@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors, radius } from '@/theme';
+import { MAX_APP_WIDTH, colors, radius } from '@/theme';
 
 type Props = {
   visible: boolean;
@@ -31,6 +31,9 @@ export function Sheet({ visible, title, onClose, children }: Props) {
 const styles = StyleSheet.create({
   root: { flex: 1, justifyContent: 'flex-end', backgroundColor: colors.overlay },
   sheet: {
+    width: '100%',
+    maxWidth: MAX_APP_WIDTH, // match the centered app column on wide screens
+    alignSelf: 'center',
     backgroundColor: colors.bg,
     borderTopLeftRadius: radius.lg,
     borderTopRightRadius: radius.lg,
