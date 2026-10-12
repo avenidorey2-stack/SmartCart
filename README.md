@@ -43,6 +43,16 @@ EXPO_PUBLIC_OCR_SPACE_KEY=your-key
 Restart `npx expo start` after editing it. `EXPO_PUBLIC_` values are baked into the JS bundle, so
 use this for personal testing only. Development builds keep using on-device ML Kit.
 
+## Web app (installable on iPhone, free)
+
+The same code runs in the browser. Build it with `npx expo export -p web` (output in `dist/`).
+It's deployed on Vercel from GitHub (`vercel.json`): every push to `master` updates the site.
+Set `EXPO_PUBLIC_OCR_SPACE_KEY` in the Vercel project's Environment Variables so scanning works —
+note the key is visible in the site's JavaScript.
+
+iPhone users open the site in **Safari → Share → Add to Home Screen**; it then opens full-screen
+like an app. Lists are saved in that browser only. The camera needs HTTPS (Vercel provides it).
+
 ## Run on a device (development build)
 
 ML Kit is a native module, so on-device scanning **does not run in Expo Go**. Use a development build:

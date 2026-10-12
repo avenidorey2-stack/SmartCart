@@ -49,6 +49,14 @@
       "eas": {
         "projectId": "37db529a-d2c2-44bb-afe6-d712312363af"
       }
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/favicon.png",
+      "name": "SmartCart",
+      "shortName": "SmartCart",
+      "themeColor": "#FFFFFF",
+      "backgroundColor": "#FFFFFF"
     }
   }
 }

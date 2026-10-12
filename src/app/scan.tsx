@@ -404,6 +404,7 @@ const styles = StyleSheet.create({
   error: { color: colors.danger, marginBottom: 10, fontSize: 14 },
   fields: { flexDirection: 'row', gap: 10 },
   input: {
+    minWidth: 0, // web <input> has an intrinsic width that otherwise overflows flex rows
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: radius.sm,

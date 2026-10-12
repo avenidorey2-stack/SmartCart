@@ -129,6 +129,7 @@ function StepButton({ icon, onPress, label }: { icon: 'add' | 'remove'; onPress:
 
 export const formStyles = StyleSheet.create({
   input: {
+    minWidth: 0, // web <input> has an intrinsic width that otherwise overflows flex rows
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: radius.sm,

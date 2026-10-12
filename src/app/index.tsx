@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
-import { Alert, Pressable, SectionList, Share, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Platform, Pressable, SectionList, Share, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BottomBar } from '@/components/BottomBar';
@@ -66,11 +66,17 @@ export default function ListScreen() {
     });
   };
 
-  const confirm = (message: string, action: () => void) =>
+  const confirm = (message: string, action: () => void) => {
+    // Alert.alert is a no-op in the browser.
+    if (Platform.OS === 'web') {
+      if (window.confirm(message)) action();
+      return;
+    }
     Alert.alert(message, undefined, [
       { text: 'Cancel', style: 'cancel' },
       { text: 'Clear', style: 'destructive', onPress: action },
     ]);
+  };
 
   const menuActions: MenuAction[] = [
     { label: 'Edit budget & list name', icon: 'wallet-outline', onPress: () => setDetailsSheet(true) },
